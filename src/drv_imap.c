@@ -2194,6 +2194,9 @@ ensure_password( imap_server_conf_t *srvc )
 static sasl_callback_t sasl_callbacks[] = {
 	{ SASL_CB_USER,     NULL, NULL },
 	{ SASL_CB_AUTHNAME, NULL, NULL },
+#ifdef __APPLE__
+    { SASL_CB_OAUTH2_BEARER_TOKEN, NULL, NULL },
+#endif
 	{ SASL_CB_PASS,     NULL, NULL },
 	{ SASL_CB_LIST_END, NULL, NULL }
 };
@@ -2211,6 +2214,9 @@ process_sasl_interact( sasl_interact_t *interact, imap_server_conf_t *srvc )
 		case SASL_CB_AUTHNAME:  // who is really logging in
 			val = ensure_user( srvc );
 			break;
+#ifdef __APPLE__
+        case SASL_CB_OAUTH2_BEARER_TOKEN:
+#endif
 		case SASL_CB_PASS:
 			val = ensure_password( srvc );
 			break;
